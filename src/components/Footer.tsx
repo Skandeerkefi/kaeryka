@@ -1,19 +1,19 @@
 import { Heart } from "lucide-react";
 import { Link } from "react-router-dom";
-import { FaKickstarterK } from "react-icons/fa"; // Kick icon approximation
+import { FaTwitch, FaYoutube } from "react-icons/fa"; // Updated icons
 import { FaInstagram, FaDiscord, FaXTwitter } from "react-icons/fa6"; // Socials
 
 export function Footer() {
 	const currentYear = new Date().getFullYear();
 
 	return (
-		<footer className='bg-[#040704] border-t border-[#547E25]/30 text-[#fffcf5]'>
+		<footer className='bg-black border-t border-[#c63352]/30 text-[#eab5ab]'>
 			<div className='container px-6 py-12 mx-auto'>
 				<div className='grid grid-cols-1 gap-10 md:grid-cols-3'>
 					{/* Gambling Warning */}
 					<div>
-						<h3 className='mb-3 text-lg font-bold text-[#EFA813]'>BEWARE GAMBLING</h3>
-						<div className='text-sm text-[#fffcf5]/80 space-y-2'>
+						<h3 className='mb-3 text-lg font-bold text-[#c63352]'>BEWARE GAMBLING</h3>
+						<div className='text-sm text-[#eab5ab]/80 space-y-2'>
 							<p>We are not responsible for illegal gambling activities.</p>
 							<p>Play responsibly. Gambling involves financial risks.</p>
 							<p>Ensure compliance with your local laws before engaging in any activities.</p>
@@ -23,17 +23,17 @@ export function Footer() {
 
 					{/* Quick Links */}
 					<div>
-						<h3 className='mb-3 text-lg font-bold text-[#EFA813]'>Quick Links</h3>
+						<h3 className='mb-3 text-lg font-bold text-[#c63352]'>Quick Links</h3>
 						<div className='grid grid-cols-1 gap-2'>
 							{[
 								{ to: "/", label: "Home" },
 								{ to: "/bonuses", label: "Bonuses" },
-								{ to: "/RoobetPage", label: "Leaderboards" },
+								{ to: "/Leaderboard", label: "Leaderboards" },
 							].map(({ to, label }) => (
 								<Link
 									key={label}
 									to={to}
-									className='text-sm text-[#fffcf5]/80 hover:text-[#EFA813] transition-colors duration-200'
+									className='text-sm text-[#eab5ab]/80 hover:text-[#c63352] transition-colors duration-200'
 								>
 									{label}
 								</Link>
@@ -43,26 +43,26 @@ export function Footer() {
 
 					{/* Social Links */}
 					<div>
-						<h3 className='mb-3 text-lg font-bold text-[#EFA813]'>Social Links</h3>
+						<h3 className='mb-3 text-lg font-bold text-[#c63352]'>Social Links</h3>
 						<div className='flex gap-3'>
 							{[
 								{
-									href: "https://discord.gg/GTZK29pBAZ",
+									href: "https://discord.gg/kxT4fq4rda",
 									icon: <FaDiscord className='w-5 h-5' />,
 									label: "Discord"
 								},
 								{
-									href: "https://www.instagram.com/tacopoju/",
-									icon: <FaInstagram className='w-5 h-5' />,
-									label: "Instagram"
+									href: "https://www.youtube.com/@kaeryka",
+									icon: <FaYoutube className='w-5 h-5' />,
+									label: "YouTube"
 								},
 								{
-									href: "https://kick.com/tacopoju",
-									icon: <FaKickstarterK className='w-5 h-5' />,
-									label: "Kick"
+									href: "https://www.twitch.tv/kaeryka",
+									icon: <FaTwitch className='w-5 h-5' />,
+									label: "Twitch"
 								},
 								{
-									href: "https://x.com/TACOPOJU",
+									href: "https://x.com/kaeryyka",
 									icon: <FaXTwitter className='w-5 h-5' />,
 									label: "Twitter"
 								},
@@ -73,7 +73,7 @@ export function Footer() {
 									aria-label={label}
 									target='_blank'
 									rel='noreferrer'
-									className='flex items-center justify-center w-9 h-9 rounded-full bg-[#547E25]/20 text-[#fffcf5] transition-all hover:bg-[#EFA813] hover:text-[#040704] hover:scale-110 duration-200'
+									className='flex items-center justify-center w-9 h-9 rounded-full bg-[#c63352]/20 text-[#eab5ab] transition-all hover:bg-[#c63352] hover:text-white hover:scale-110 duration-200'
 								>
 									{icon}
 								</a>
@@ -83,16 +83,16 @@ export function Footer() {
 				</div>
 
 				{/* Bottom Bar */}
-				<div className='pt-6 mt-12 border-t border-[#547E25]/30 text-center text-sm text-[#fffcf5]/70'>
+				<div className='pt-6 mt-12 border-t border-[#c63352]/30 text-center text-sm text-[#eab5ab]/70'>
 					<p className='flex flex-wrap items-center justify-center gap-1'>
-						© {currentYear} TACOPOJU.Site. All rights reserved. Made with
-						<Heart className='w-3 h-3 mx-1 text-[#EFA813]' />
+						© {currentYear} KAERYKA.Site. All rights reserved. Made with
+						<Heart className='w-3 h-3 mx-1 text-[#c63352]' />
 						by{" "}
 						<a
 							href='https://www.linkedin.com/in/skander-kefi/'
 							target='_blank'
 							rel='noreferrer'
-							className='font-medium text-[#fffcf5] hover:text-[#EFA813] transition-colors duration-200'
+							className='font-medium text-[#eab5ab] hover:text-[#c63352] transition-colors duration-200'
 						>
 							Skander
 						</a>

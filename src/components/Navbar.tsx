@@ -35,12 +35,12 @@ const MockUseLocation = () => ({
 });
 // -----------------------------------------------------------
 
-// Color Palette Used:
-// Background: #040704
-// Primary Accent: #EFA813
-// Secondary Accent: #547E25
-// CTA/Highlight: #E84D06
-// Active Link Container (Custom Dark Indigo to match screenshot): #1E1A33
+// Updated Color Palette:
+// Background: black
+// Primary Accent: #c63352
+// Secondary Accent: #eab5ab
+// CTA/Highlight: #c63352
+// Active Link Container: #2a0f1a
 
 export function Navbar() {
     // Replace useLocation() with MockUseLocation() for standalone use, keep for project use
@@ -67,20 +67,20 @@ export function Navbar() {
 
     return (
         <>
-            {/* Fixed Navbar - Deep Dark Background (#040704) */}
-            <nav className='fixed top-0 w-full z-50 backdrop-blur-sm bg-[#040704]/95 border-b border-[#547E25]/30 shadow-2xl shadow-black/70 h-20 font-sans'>
+            {/* Fixed Navbar - Black Background */}
+            <nav className='fixed top-0 w-full z-50 backdrop-blur-sm bg-black/95 border-b border-[#c63352]/30 shadow-2xl shadow-black/70 h-20 font-sans'>
                 <div className='container relative flex items-center justify-between h-full px-6 mx-auto'>
                     
-                    {/* Logo/Brand Section - Styled to match dark background */}
+                    {/* Logo/Brand Section - Styled to match black background */}
                     <Link to='/' className='flex items-center space-x-3 select-none'>
                         {/* Placeholder image that uses the primary accent color */}
                         <img
-                            src='https://i.ibb.co/XrDRLV7S/acloseupof-subject-1-smokingacigarettewiththesmokemoving-ezgif-com-gif-maker.gif'
-                            alt='Rafaeli Logo'
-                            className='w-12 h-12 rounded-full border-2 border-[#EFA813] shadow-[0_0_15px_rgba(239,168,19,0.5)] object-cover'
+                            src='https://i.ibb.co/KjxywBMB/logogif.gif'
+                            alt='Kaeryka Logo'
+                            className='w-12 h-12 rounded-full border-2 border-[#c63352] shadow-[0_0_15px_rgba(198,51,82,0.5)] object-cover'
                         />
                         <span className='text-3xl font-bold tracking-wider text-white'>
-                            <span className="text-white font-semibold">TACOPOJU</span>
+                            <span className="text-white font-semibold">KAERYKA</span>
                         </span>
                     </Link>
 
@@ -97,8 +97,8 @@ export function Navbar() {
                                             className={`
                                                 flex items-center transition-all duration-300 rounded-xl
                                                 ${isActive
-                                                    ? 'bg-[#1E1A33] text-white px-5 py-2 shadow-lg shadow-[#547E25]/20' // Active: Dark box
-                                                    : 'text-gray-300 hover:text-[#EFA813] px-5 py-2' // Inactive: Subtle hover accent
+                                                    ? 'bg-[#2a0f1a] text-[#eab5ab] px-5 py-2 shadow-lg shadow-[#c63352]/20' // Active: Dark pink box
+                                                    : 'text-[#eab5ab] hover:text-[#c63352] px-5 py-2' // Inactive: Soft pink with hover to primary
                                                 }
                                             `}
                                         >
@@ -114,17 +114,17 @@ export function Navbar() {
                     {/* Right side controls: CTA Button & Mobile Menu Button */}
                     <div className='flex items-center space-x-4'>
 
-                        {/* CTA Button: Join Discord - Vibrant Highlight Color (#E84D06) */}
+                        {/* CTA Button: Join Discord - Primary Color (#c63352) */}
                         <a 
-                            href="https://discord.gg/GTZK29pBAZ" 
+                            href="https://discord.gg/kxT4fq4rda" 
                             target="_blank" 
                             rel="noopener noreferrer"
                             className='hidden md:flex items-center space-x-2 
-                                bg-[#E84D06] text-[#040704] 
-                                hover:bg-[#EFA813] transition 
+                                bg-[#c63352] text-white 
+                                hover:bg-[#eab5ab] hover:text-black transition 
                                 px-6 py-3 rounded-xl 
                                 font-bold text-lg 
-                                shadow-2xl shadow-[#E84D06]/40
+                                shadow-2xl shadow-[#c63352]/40
                                 transform hover:scale-105 active:scale-95'
                         >
                             <MessageSquare className='w-5 h-5' /> 
@@ -138,18 +138,18 @@ export function Navbar() {
                                 className='relative z-50 w-8 h-8 flex flex-col justify-center items-center gap-1.5'
                             >
                                 <span
-                                    className={`block w-8 h-1 bg-white rounded transition-transform duration-300 ${
-                                        isOpen ? "rotate-45 translate-y-2.5 bg-[#E84D06]" : ""
+                                    className={`block w-8 h-1 bg-[#eab5ab] rounded transition-transform duration-300 ${
+                                        isOpen ? "rotate-45 translate-y-2.5 bg-[#c63352]" : ""
                                     }`}
                                 />
                                 <span
-                                    className={`block w-8 h-1 bg-white rounded transition-opacity duration-300 ${
+                                    className={`block w-8 h-1 bg-[#eab5ab] rounded transition-opacity duration-300 ${
                                         isOpen ? "opacity-0" : "opacity-100"
                                     }`}
                                 />
                                 <span
-                                    className={`block w-8 h-1 bg-white rounded transition-transform duration-300 ${
-                                        isOpen ? "-rotate-45 -translate-y-2.5 bg-[#E84D06]" : ""
+                                    className={`block w-8 h-1 bg-[#eab5ab] rounded transition-transform duration-300 ${
+                                        isOpen ? "-rotate-45 -translate-y-2.5 bg-[#c63352]" : ""
                                     }`}
                                 />
                             </button>
@@ -161,7 +161,7 @@ export function Navbar() {
             {/* Mobile Menu - Full-screen overlay */}
             {isMobile && (
                 <div
-                    className={`fixed inset-0 z-40 bg-[#040704]/95 backdrop-blur-md flex flex-col items-center justify-start pt-24 space-y-6 text-xl font-semibold text-white transform transition-transform duration-300 ${
+                    className={`fixed inset-0 z-40 bg-black/95 backdrop-blur-md flex flex-col items-center justify-start pt-24 space-y-6 text-xl font-semibold text-white transform transition-transform duration-300 ${
                         isOpen ? "translate-x-0" : "-translate-x-full"
                     }`}
                 >
@@ -171,8 +171,8 @@ export function Navbar() {
                             to={item.path}
                             className={`flex items-center space-x-3 px-6 py-3 rounded-lg w-full max-w-xs justify-center transition ${
                                 location.pathname === item.path
-                                    ? "bg-[#1E1A33] text-[#EFA813]"
-                                    : "text-gray-300 hover:text-[#EFA813] hover:bg-[#040704]/50"
+                                    ? "bg-[#2a0f1a] text-[#c63352]"
+                                    : "text-[#eab5ab] hover:text-[#c63352] hover:bg-black/50"
                             }`}
                         >
                             {item.icon}
@@ -181,15 +181,15 @@ export function Navbar() {
                     ))}
                      {/* Mobile CTA Button */}
                      <a 
-                        href="https://discord.gg/yourserver" 
+                        href="https://discord.gg/kxT4fq4rda" 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className='flex items-center space-x-2 
-                            bg-[#E84D06] text-[#040704] 
-                            hover:bg-opacity-90 transition 
+                            bg-[#c63352] text-white 
+                            hover:bg-[#eab5ab] hover:text-black transition 
                             px-8 py-3 rounded-xl 
                             font-bold text-lg 
-                            shadow-xl shadow-[#E84D06]/40 mt-8'
+                            shadow-xl shadow-[#c63352]/40 mt-8'
                     >
                         <MessageSquare className='w-5 h-5' /> 
                         <span>Join Discord</span>
