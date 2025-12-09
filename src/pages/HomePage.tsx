@@ -43,7 +43,7 @@ const HomePage = () => {
             className="mt-5 text-xl md:text-2xl text-[#eab5ab] max-w-2xl"
           >
             Wager under code <span className="text-[#c63352] font-bold">'kaeryka'</span> for
-            prizes, rewards, and leaderboard glory.
+            prizes, rewards, and 1000C leaderboard glory.
           </motion.p>
 
           <motion.div
