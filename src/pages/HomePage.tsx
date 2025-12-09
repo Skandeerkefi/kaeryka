@@ -166,47 +166,28 @@ const HomePage = () => {
         </section>
 
         {/* STREAM SECTION */}
-<section className="py-20 px-8 text-center">
-  <motion.h2
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6 }}
-    className="text-4xl font-bold text-[#c63352] mb-10"
-  >
-    Watch My Streams 🎮
-  </motion.h2>
+        <section className="py-20 px-8 text-center">
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-4xl font-bold text-[#c63352] mb-10"
+          >
+            Watch My Streams 🎮
+          </motion.h2>
+          <div className="flex justify-center">
+            <motion.iframe
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  transition={{ delay: 0.3 }}
+  src="https://player.twitch.tv/?channel=kaeryka&parent=kaeryka.vercel.app"
+  frameBorder="0"
+  allowFullScreen
+  className="w-full max-w-5xl h-[420px] rounded-3xl border border-[#c63352]/40 shadow-[0_0_25px_rgba(198,51,82,0.3)] hover:shadow-[#eab5ab]/30 transition-all"
+/>
 
-  <div className="flex justify-center">
-    <motion.div
-      id="twitch-embed"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ delay: 0.3 }}
-      className="w-full max-w-5xl h-[420px] rounded-3xl border border-[#c63352]/40 shadow-[0_0_25px_rgba(198,51,82,0.3)] hover:shadow-[#eab5ab]/30 transition-all"
-    ></motion.div>
-  </div>
-
-  {/* Twitch Embed Script */}
-  <script
-    dangerouslySetInnerHTML={{
-      __html: `
-        const script = document.createElement("script");
-        script.src = "https://embed.twitch.tv/embed/v1.js";
-        script.async = true;
-        script.onload = () => {
-          new Twitch.Embed("twitch-embed", {
-            width: "100%",
-            height: 420,
-            channel: "kaeryka",
-            parent: ["kaeryka-k6ir.vercel.app"]
-          });
-        };
-        document.body.appendChild(script);
-      `,
-    }}
-  />
-</section>
-
+          </div>
+        </section>
 
         <Footer />
       </div>
