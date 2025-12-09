@@ -195,7 +195,7 @@ const CSGOWinPage: React.FC = () => {
           </DialogHeader>
 
           <div className="space-y-3 text-[#eab5ab]">
-            <p>🏆 Top 10 players earn prizes</p>
+            <p>🏆 Top 6 players earn prizes</p>
             <p>🎯 Use code <strong className="text-[#c63352]">kaeryka</strong></p>
           </div>
         </DialogContent>
