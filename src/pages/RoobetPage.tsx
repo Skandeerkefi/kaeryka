@@ -32,7 +32,7 @@ const CSGOWinPage: React.FC = () => {
       await fetchLeaderboard(10);
 
       const res = await fetch(
-        "https://misterteedata-production.up.railway.app/api/leaderboard/csgowin"
+        "https://kaerykadata-production.up.railway.app//api/leaderboard/csgowinn"
       );
       const data = await res.json();
       const currentLB = data.leaderboards?.[0];

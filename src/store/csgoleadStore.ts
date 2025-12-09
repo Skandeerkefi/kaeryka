@@ -30,7 +30,7 @@ export const useCSGOLeadStore = create<CSGOLeadState>((set) => ({
 
     try {
       const res = await fetch(
-        `https://misterteedata-production.up.railway.app/api/leaderboard/csgowin`
+        `https://kaerykadata-production.up.railway.app//api/leaderboard/csgowinn`
       );
 
       if (!res.ok) throw new Error("Failed to fetch leaderboard");
