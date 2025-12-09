@@ -177,15 +177,15 @@ const HomePage = () => {
           </motion.h2>
           <div className="flex justify-center">
             <motion.iframe
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              src="https://player.twitch.tv/?channel=kaeryka&parent=kaeryka-k6ir.vercel.app"
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  transition={{ delay: 0.3 }}
+  src="https://player.twitch.tv/?channel=kaeryka&parent=kaeryka-k6ir.vercel.app"
+  frameBorder="0"
+  allowFullScreen
+  className="w-full max-w-5xl h-[420px] rounded-3xl border border-[#c63352]/40 shadow-[0_0_25px_rgba(198,51,82,0.3)] hover:shadow-[#eab5ab]/30 transition-all"
+/>
 
-              frameBorder="0"
-              allowFullScreen
-              className="w-full max-w-5xl h-[420px] rounded-3xl border border-[#c63352]/40 shadow-[0_0_25px_rgba(198,51,82,0.3)] hover:shadow-[#eab5ab]/30 transition-all"
-            ></motion.iframe>
           </div>
         </section>
 
