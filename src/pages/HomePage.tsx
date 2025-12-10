@@ -99,6 +99,68 @@ const HomePage = () => {
             </motion.div>
           ))}
         </section>
+{/* SKINCLUB GIVEAWAY SECTION */}
+<section className="py-20 px-8 text-center">
+  <motion.h2
+    initial={{ opacity: 0, y: 30 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6 }}
+    className="text-4xl font-bold text-[#c63352] mb-10"
+  >
+    SkinClub Giveaway 🎁
+  </motion.h2>
+
+  {/* Giveaway Image */}
+  <div className="flex justify-center mb-10">
+    <motion.img
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.01 }}
+      src="https://i.ibb.co/xSgwhG4c/image.png"
+      alt="SkinClub Giveaway"
+      className="w-full max-w-3xl rounded-3xl shadow-[0_0_25px_rgba(198,51,82,0.3)]"
+    />
+  </div>
+
+  <p className="text-[#eab5ab] text-lg mb-10 max-w-2xl mx-auto">
+    Use any code below to enter the giveaway automatically.
+  </p>
+
+  {/* Codes Grid */}
+  <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
+    {[
+      "https://bit.ly/1225KAERYKA1V",
+      "https://bit.ly/1225KAERYKA2V",
+      "https://bit.ly/1225KAERYKA3V",
+      "https://bit.ly/1225KAERYKA4V",
+      "https://bit.ly/1225KAERYKA5V",
+      "https://bit.ly/1225KAERYKA6V",
+      "https://bit.ly/1225KAERYKA7V",
+      "https://bit.ly/1225KAERYKA8V",
+      "https://bit.ly/1225KAERYKA9V",
+      "https://bit.ly/1225KAERYKA10V",
+      "https://bit.ly/1225KAERYKA11V",
+      "https://bit.ly/1225KAERYKA12V",
+      "https://bit.ly/1225KAERYKA13V",
+      "https://bit.ly/1225KAERYKA14V",
+      "https://bit.ly/1225KAERYKA15V",
+      "https://bit.ly/1225KAERYKA16V",
+      "https://bit.ly/1225KAERYKA17V",
+      "https://bit.ly/1225KAERYKA18V",
+      "https://bit.ly/1225KAERYKA19V",
+      "https://bit.ly/1225KAERYKA20V",
+    ].map((code, index) => (
+      <motion.button
+        key={index}
+        whileHover={{ scale: 1.05 }}
+        onClick={() => window.open(code, "_blank")}
+        className="p-4 rounded-2xl bg-gradient-to-b from-black/60 to-black/40 border border-[#BF0ED2]/30 shadow-lg backdrop-blur-md text-[#eab5ab] font-semibold text-sm hover:shadow-[#eab5ab]/20 transition-all"
+      >
+        Code #{index + 1}
+      </motion.button>
+    ))}
+  </div>
+</section>
 
         {/* SOCIAL SECTION */}
         <section className="py-20 px-6 text-center">
