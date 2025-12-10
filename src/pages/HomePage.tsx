@@ -54,7 +54,7 @@ const HomePage = () => {
           >
             <Button
               className="bg-[#c63352] hover:bg-[#eab5ab] hover:text-black text-white px-8 py-4 rounded-2xl text-lg font-semibold shadow-lg hover:shadow-[#eab5ab]/40 transition-all"
-              onClick={() => window.open("https://roobet.com/?ref=kaeryka", "_blank")}
+              onClick={() => window.open("https://csgowin.com/r/kaeryka", "_blank")}
             >
               Join Leaderboard
             </Button>
