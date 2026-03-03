@@ -7,10 +7,10 @@ import { Instagram, Twitch, Twitter, Youtube } from "lucide-react";
 
 const HomePage = () => {
   return (
-    <div className="text-white min-h-screen flex flex-col relative">
+    <div className="relative flex flex-col min-h-screen text-white">
       {/* Full Page GIF Background */}
       <div
-        className="fixed inset-0 bg-contain bg-center bg-no-repeat opacity-44 z-0"
+        className="fixed inset-0 z-0 bg-center bg-no-repeat bg-contain opacity-44"
         style={{
           backgroundImage: `url('https://i.ibb.co/KjxywBMB/logogif.gif')`,
           backgroundColor: "#000"
@@ -19,14 +19,14 @@ const HomePage = () => {
 
       
       {/* Gradient Overlay for better readability */}
-      <div className="fixed inset-0 bg-gradient-to-b from-black/80 via-black/90 to-black z-0"></div>
+      <div className="fixed inset-0 z-0 bg-gradient-to-b from-black/80 via-black/90 to-black"></div>
 
       {/* Content */}
       <div className="relative z-10">
         <Navbar />
 
         {/* HERO SECTION */}
-        <section className="relative flex flex-col items-center justify-center text-center py-28 px-6 overflow-hidden">
+        <section className="relative flex flex-col items-center justify-center px-6 overflow-hidden text-center py-28">
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -70,7 +70,7 @@ const HomePage = () => {
         </section>
 
         {/* FEATURE CARDS */}
-        <section className="grid grid-cols-1 sm:grid-cols-3 gap-8 px-8 py-20 text-center">
+        <section className="grid grid-cols-1 gap-8 px-8 py-20 text-center sm:grid-cols-3">
           {[
             {
               title: "Leaderboard",
@@ -100,7 +100,7 @@ const HomePage = () => {
           ))}
         </section>
 {/* SKINCLUB GIVEAWAY SECTION */}
-<section className="py-20 px-8 text-center">
+<section className="px-8 py-20 text-center">
   <motion.h2
     initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -127,28 +127,28 @@ const HomePage = () => {
   </p>
 
   {/* Codes Grid */}
-  <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
+  <div className="grid max-w-6xl grid-cols-1 gap-6 mx-auto sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
     {[
-      "https://bit.ly/1225KAERYKA1V",
-      "https://bit.ly/1225KAERYKA2V",
-      "https://bit.ly/1225KAERYKA3V",
-      "https://bit.ly/1225KAERYKA4V",
-      "https://bit.ly/1225KAERYKA5V",
-      "https://bit.ly/1225KAERYKA6V",
-      "https://bit.ly/1225KAERYKA7V",
-      "https://bit.ly/1225KAERYKA8V",
-      "https://bit.ly/1225KAERYKA9V",
-      "https://bit.ly/1225KAERYKA10V",
-      "https://bit.ly/1225KAERYKA11V",
-      "https://bit.ly/1225KAERYKA12V",
-      "https://bit.ly/1225KAERYKA13V",
-      "https://bit.ly/1225KAERYKA14V",
-      "https://bit.ly/1225KAERYKA15V",
-      "https://bit.ly/1225KAERYKA16V",
-      "https://bit.ly/1225KAERYKA17V",
-      "https://bit.ly/1225KAERYKA18V",
-      "https://bit.ly/1225KAERYKA19V",
-      "https://bit.ly/1225KAERYKA20V",
+     "https://bit.ly/326KAERYKA1V",
+"https://bit.ly/326KAERYKA2V",
+"https://bit.ly/326KAERYKA3V",
+"https://bit.ly/326KAERYKA4V",
+"https://bit.ly/326KAERYKA5V",
+"https://bit.ly/326KAERYKA6V",
+"https://bit.ly/326KAERYKA7V",
+"https://bit.ly/326KAERYKA8V",
+"https://bit.ly/326KAERYKA9V",
+"https://bit.ly/326KAERYKA10V",
+"https://bit.ly/326KAERYKA11V",
+"https://bit.ly/326KAERYKA12V",
+"https://bit.ly/326KAERYKA13V",
+"https://bit.ly/326KAERYKA14V",
+"https://bit.ly/326KAERYKA15V",
+"https://bit.ly/326KAERYKA16V",
+"https://bit.ly/326KAERYKA17V",
+"https://bit.ly/326KAERYKA18V",
+"https://bit.ly/326KAERYKA19V",
+"https://bit.ly/326KAERYKA20V",
     ].map((code, index) => (
       <motion.button
         key={index}
@@ -163,11 +163,11 @@ const HomePage = () => {
 </section>
 
         {/* SOCIAL SECTION */}
-        <section className="py-20 px-6 text-center">
+        <section className="px-6 py-20 text-center">
           <h2 className="text-3xl font-bold text-[#c63352] mb-10">
             Connect with Me 🌐
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+          <div className="grid max-w-6xl grid-cols-1 gap-8 mx-auto md:grid-cols-4">
             {[
               {
                 href: "https://www.youtube.com/@kaeryka",
@@ -206,11 +206,11 @@ const HomePage = () => {
                 whileHover={{ scale: 1.05 }}
                 className="flex flex-col items-center rounded-2xl bg-gradient-to-b from-black/70 to-black/50 border border-[#c63352]/30 overflow-hidden shadow-md hover:shadow-[#eab5ab]/20 transition-all"
               >
-                <div className="w-full h-36 bg-black flex items-center justify-center">
+                <div className="flex items-center justify-center w-full bg-black h-36">
                   <img
                     src={social.img}
                     alt={social.title}
-                    className="h-16 object-contain opacity-80 hover:opacity-100 transition-all"
+                    className="object-contain h-16 transition-all opacity-80 hover:opacity-100"
                   />
                 </div>
                 <div className="p-6">
@@ -228,7 +228,7 @@ const HomePage = () => {
         </section>
 
         {/* STREAM SECTION */}
-        <section className="py-20 px-8 text-center">
+        <section className="px-8 py-20 text-center">
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
