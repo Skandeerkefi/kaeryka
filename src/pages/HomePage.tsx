@@ -126,30 +126,30 @@ const HomePage = () => {
     Use any code below to enter the giveaway automatically.
   </p>
 
-  {/* Codes Grid */}
-  <div className="grid max-w-6xl grid-cols-1 gap-6 mx-auto sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-    {[
-     "https://bit.ly/326KAERYKA1V",
-"https://bit.ly/326KAERYKA2V",
-"https://bit.ly/326KAERYKA3V",
-"https://bit.ly/326KAERYKA4V",
-"https://bit.ly/326KAERYKA5V",
-"https://bit.ly/326KAERYKA6V",
-"https://bit.ly/326KAERYKA7V",
-"https://bit.ly/326KAERYKA8V",
-"https://bit.ly/326KAERYKA9V",
-"https://bit.ly/326KAERYKA10V",
-"https://bit.ly/326KAERYKA11V",
-"https://bit.ly/326KAERYKA12V",
-"https://bit.ly/326KAERYKA13V",
-"https://bit.ly/326KAERYKA14V",
-"https://bit.ly/326KAERYKA15V",
-"https://bit.ly/326KAERYKA16V",
-"https://bit.ly/326KAERYKA17V",
-"https://bit.ly/326KAERYKA18V",
-"https://bit.ly/326KAERYKA19V",
-"https://bit.ly/326KAERYKA20V",
-    ].map((code, index) => (
+   {/* Codes Grid */}
+   <div className="grid max-w-6xl grid-cols-1 gap-6 mx-auto sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+     {[
+      "https://bit.ly/526KAERYKA1V",
+ "https://bit.ly/526KAERYKA2V",
+ "https://bit.ly/526KAERYKA3V",
+ "https://bit.ly/526KAERYKA4V",
+ "https://bit.ly/526KAERYKA5V",
+ "https://bit.ly/526KAERYKA6V",
+ "https://bit.ly/526KAERYKA7V",
+ "https://bit.ly/526KAERYKA8V",
+ "https://bit.ly/526KAERYKA9V",
+ "https://bit.ly/526KAERYKA10V",
+ "https://bit.ly/526KAERYKA11V",
+ "https://bit.ly/526KAERYKA12V",
+ "https://bit.ly/526KAERYKA13V",
+ "https://bit.ly/526KAERYKA14V",
+ "https://bit.ly/526KAERYKA15V",
+ "https://bit.ly/526KAERYKA16V",
+ "https://bit.ly/526KAERYKA17V",
+ "https://bit.ly/526KAERYKA18V",
+ "https://bit.ly/526KAERYKA19V",
+ "https://bit.ly/526KAERYKA20V",
+     ].map((code, index) => (
       <motion.button
         key={index}
         whileHover={{ scale: 1.05 }}
