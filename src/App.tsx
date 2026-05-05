@@ -1,19 +1,18 @@
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "@/pages/HomePage";
-// // import LeaderboardPage from "@/pages/LeaderboardPage";
-// import SlotCallsPage from "@/pages/SlotCallsPage";
-// import GiveawaysPage from "@/pages/GiveawaysPage";
-// import LoginPage from "@/pages/LoginPage";
-// import SignupPage from "@/pages/SignupPage";
-// import NotFoundPage from "@/pages/NotFoundPage";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuthStore } from "@/store/useAuthStore";
-// import SlotOverlay from "@/pages/SlotOverlay";
-// import BonusHuntPage from "@/pages/BonusHuntPage";
 import RoobetPage from "@/pages/RoobetPage";
 import LeaderboardPage from "./pages/LeaderboardPage";
+import GiveawaysPage from "@/pages/GiveawaysPage";
+import LoginPage from "@/pages/LoginPage";
+import SignupPage from "@/pages/SignupPage";
+import NotFoundPage from "@/pages/NotFoundPage";
+import SlotCallsPage from "@/pages/SlotCallsPage";
+import BonusHuntPage from "@/pages/BonusHuntPage";
+import AdminDashboard from "@/pages/AdminDashboard";
 function App() {
 	const loadFromStorage = useAuthStore((state) => state.loadFromStorage);
 	const user = useAuthStore((state) => state.user);
@@ -36,19 +35,14 @@ function App() {
 			<BrowserRouter>
 				<Routes>
 					<Route path='/' element={<HomePage />} />
-					{/* <Route path='/leaderboard' element={<LeaderboardPage />} /> */}
-					{/* <Route path='/slot-calls' element={<SlotCallsPage />} />
+					<Route path='/leaderboard' element={<RoobetPage />} />
+					<Route path='/Leaderboard' element={<RoobetPage />} />
+					<Route path='/slot-calls' element={<SlotCallsPage />} />
 					<Route path='/giveaways' element={<GiveawaysPage />} />
 					<Route path='/login' element={<LoginPage />} />
 					<Route path='/signup' element={<SignupPage />} />
+					<Route path='/bonus-hunt' element={<BonusHuntPage />} />				<Route path='/admin' element={<AdminDashboard />} />					<Route path='/RoobetPage' element={<RoobetPage />} />
 					<Route path='*' element={<NotFoundPage />} />
-					<Route path='/slot-overlay' element={<SlotOverlay />} />
-					<Route path='/bonus-hunt' element={<BonusHuntPage />} />
-					*/}
-					<Route path='/Leaderboard' element={<RoobetPage />} />
-					<Route path='/RoobetPage' element={<RoobetPage />} /> 
-					
-					
 				</Routes>
 			</BrowserRouter>
 			<Toaster />

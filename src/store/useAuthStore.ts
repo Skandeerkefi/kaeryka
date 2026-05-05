@@ -2,9 +2,12 @@ import { create } from "zustand";
 
 interface User {
 	id: string;
-	kickUsername: string;
-	rainbetUsername: string; // add this
+	twitchUsername: string;
+	discordUsername: string;
+	csgoName: string;
 	role: string; // "user" or "admin"
+	kickUsername?: string;
+	rainbetUsername?: string;
 }
 
 interface AuthState {
@@ -17,13 +20,14 @@ interface AuthState {
 	setIsLoading: (loading: boolean) => void;
 
 	login: (
-		kickUsername: string,
+		csgoName: string,
 		password: string
 	) => Promise<{ success: boolean; error?: string }>;
 
 	signup: (
-		kickUsername: string,
-		rainbetUsername: string,
+		twitchUsername: string,
+		discordUsername: string,
+		csgoName: string,
 		password: string,
 		confirmPassword: string
 	) => Promise<boolean>;
@@ -41,15 +45,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 	setToken: (token) => set({ token }),
 	setIsLoading: (loading) => set({ isLoading: loading }),
 
-	login: async (kickUsername, password) => {
+	login: async (csgoName, password) => {
 		try {
 			const res = await fetch(
-				"https://kingdata-vez1.onrender.com/api/auth/login",
-				// "https://pnpplxprssdata.onrender.com/api/auth/login",
+				"https://kaerykadata-production.up.railway.app/api/auth/login",
 				{
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ kickUsername, password }),
+					body: JSON.stringify({ csgoName, password }),
 				}
 			);
 
@@ -76,18 +79,24 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 		}
 	},
 
-	signup: async (kickUsername, rainbetUsername, password, confirmPassword) => {
+	signup: async (
+		twitchUsername,
+		discordUsername,
+		csgoName,
+		password,
+		confirmPassword
+	) => {
 		set({ isLoading: true });
 		try {
 			const res = await fetch(
-				// "https://pnpplxprssdata.onrender.com/api/auth/register",
-				"https://kingdata-vez1.onrender.com/api/auth/register",
+				"https://kaerykadata-production.up.railway.app/api/auth/register",
 				{
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({
-						kickUsername,
-						rainbetUsername,
+						twitchUsername,
+						discordUsername,
+						csgoName,
 						password,
 						confirmPassword,
 					}),
@@ -123,6 +132,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 		if (token && userStr) {
 			try {
 				const user = JSON.parse(userStr);
+
+				if (!user.csgoName && user.kickUsername) {
+					user.csgoName = user.kickUsername;
+				}
+				if (!user.twitchUsername && user.rainbetUsername) {
+					user.twitchUsername = user.rainbetUsername;
+				}
+				if (!user.discordUsername) {
+					user.discordUsername = "";
+				}
 
 				if (!user.role || typeof user.role !== "string") {
 					console.warn(

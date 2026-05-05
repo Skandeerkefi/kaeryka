@@ -1,204 +1,161 @@
-import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { Dices, Crown, MessageSquare } from "lucide-react";
-
-// --- Mock Dependencies for Runnability in a Single File ---
-// NOTE: These mock versions are included to make the file runnable in a single-file environment.
-// In your actual project, you would use the imported dependencies directly.
-
-// Mock for useMediaQuery hook (Adjusted to be a simple implementation)
-const useMediaQuery = (query) => {
-    const [matches, setMatches] = useState(false);
-
-    useEffect(() => {
-        const media = window.matchMedia(query);
-        if (media.matches !== matches) {
-            setMatches(media.matches);
-        }
-        const listener = () => setMatches(window.matchMedia(query).matches);
-        window.addEventListener("resize", listener);
-        return () => window.removeEventListener("resize", listener);
-    }, [query, matches]);
-
-    return matches;
-};
-
-// Mock for useAuthStore and user
-const useAuthStore = () => ({
-    user: null, // Set to null to simplify the output, as auth logic was commented out
-    logout: () => console.log("Logout mock called"),
-});
-
-// Mock for react-router-dom's useLocation
-const MockUseLocation = () => ({
-    pathname: "/Leaderboard", // Mocking the Leaderboard link as active initially to show the style
-});
-// -----------------------------------------------------------
-
-// Updated Color Palette:
-// Background: black
-// Primary Accent: #c63352
-// Secondary Accent: #eab5ab
-// CTA/Highlight: #c63352
-// Active Link Container: #2a0f1a
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Crown, Dices, Gift, LogIn, LogOut, MessageSquare, UserPlus, ShieldAlert } from "lucide-react";
+import useMediaQuery from "@/hooks/use-media-query";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export function Navbar() {
-    // Replace useLocation() with MockUseLocation() for standalone use, keep for project use
-    const location = useLocation(); 
-    const isMobile = useMediaQuery("(max-width: 768px)");
-    const [isOpen, setIsOpen] = useState(false);
-    // Removed isLive and viewerCount state/effects as they are not needed for the UI design change
-    const { user, logout } = useAuthStore(); 
+	const location = useLocation();
+	const navigate = useNavigate();
+	const isMobile = useMediaQuery("(max-width: 768px)");
+	const [isOpen, setIsOpen] = useState(false);
+	const { user, logout } = useAuthStore();
 
-    useEffect(() => {
-        // Close menu on navigation or mobile/desktop change
-        setIsOpen(false);
-    }, [location.pathname, isMobile]);
+	useEffect(() => {
+		setIsOpen(false);
+	}, [location.pathname, isMobile]);
 
-    // Simplified menu items based on user's original array
-    const menuItems = [
-        { path: "/", name: "Home", icon: <Dices className='w-5 h-5' /> },
-        {
-            path: "/Leaderboard",
-            name: "Leaderboard",
-            icon: <Crown className='w-5 h-5' />,
-        },
-    ];
+	const baseItems = [
+		{ path: "/", name: "Home", icon: <Dices className='w-5 h-5' /> },
+		{ path: "/leaderboard", name: "Leaderboard", icon: <Crown className='w-5 h-5' /> },
+	];
 
-    return (
-        <>
-            {/* Fixed Navbar - Black Background */}
-            <nav className='fixed top-0 w-full z-50 backdrop-blur-sm bg-black/95 border-b border-[#c63352]/30 shadow-2xl shadow-black/70 h-20 font-sans'>
-                <div className='container relative flex items-center justify-between h-full px-6 mx-auto'>
-                    
-                    {/* Logo/Brand Section - Styled to match black background */}
-                    <Link to='/' className='flex items-center space-x-3 select-none'>
-                        {/* Placeholder image that uses the primary accent color */}
-                        <img
-                            src='https://i.ibb.co/KjxywBMB/logogif.gif'
-                            alt='Kaeryka Logo'
-                            className='w-12 h-12 rounded-full border-2 border-[#c63352] shadow-[0_0_15px_rgba(198,51,82,0.5)] object-cover'
-                        />
-                        <span className='text-3xl font-bold tracking-wider text-white'>
-                            <span className="text-white font-semibold">KAERYKA</span>
-                        </span>
-                    </Link>
+	const getMenuItems = () => {
+		if (!user) {
+			return [
+				...baseItems,
+				{ path: "/giveaways", name: "Giveaways", icon: <Gift className='w-5 h-5' /> },
+				{ path: "/login", name: "Login", icon: <LogIn className='w-5 h-5' /> },
+				{ path: "/signup", name: "Sign Up", icon: <UserPlus className='w-5 h-5' /> },
+			];
+		}
 
-                    {/* Desktop Menu - Centered and Styled with Active Box */}
-                    {!isMobile && (
-                        <ul className='flex items-center space-x-8 text-white font-semibold'>
-                            {menuItems.map((item) => {
-                                // Check location for active state
-                                const isActive = location.pathname === item.path;
-                                return (
-                                    <li key={item.path} className='relative'>
-                                        <Link
-                                            to={item.path}
-                                            className={`
-                                                flex items-center transition-all duration-300 rounded-xl
-                                                ${isActive
-                                                    ? 'bg-[#2a0f1a] text-[#eab5ab] px-5 py-2 shadow-lg shadow-[#c63352]/20' // Active: Dark pink box
-                                                    : 'text-[#eab5ab] hover:text-[#c63352] px-5 py-2' // Inactive: Soft pink with hover to primary
-                                                }
-                                            `}
-                                        >
-                                            {/* Only showing text for desktop navigation as per screenshot */}
-                                            <span>{item.name}</span>
-                                        </Link>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    )}
+		if (user.role === "admin") {
+			return [
+				...baseItems,
+				{ path: "/admin", name: "Admin Dashboard", icon: <ShieldAlert className='w-5 h-5' /> },
+				{ path: "/giveaways", name: "Giveaways", icon: <Gift className='w-5 h-5' /> },
+			];
+		}
 
-                    {/* Right side controls: CTA Button & Mobile Menu Button */}
-                    <div className='flex items-center space-x-4'>
+		return [
+			...baseItems,
+			{ path: "/giveaways", name: "Giveaways", icon: <Gift className='w-5 h-5' /> },
+		];
+	};
 
-                        {/* CTA Button: Join Discord - Primary Color (#c63352) */}
-                        <a 
-                            href="https://discord.gg/kxT4fq4rda" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className='hidden md:flex items-center space-x-2 
-                                bg-[#c63352] text-white 
-                                hover:bg-[#eab5ab] hover:text-black transition 
-                                px-6 py-3 rounded-xl 
-                                font-bold text-lg 
-                                shadow-2xl shadow-[#c63352]/40
-                                transform hover:scale-105 active:scale-95'
-                        >
-                            <MessageSquare className='w-5 h-5' /> 
-                            <span>Join Discord</span>
-                        </a>
+	const menuItems = getMenuItems();
 
-                        {/* Mobile Hamburger */}
-                        {isMobile && (
-                            <button
-                                onClick={() => setIsOpen(!isOpen)}
-                                className='relative z-50 w-8 h-8 flex flex-col justify-center items-center gap-1.5'
-                            >
-                                <span
-                                    className={`block w-8 h-1 bg-[#eab5ab] rounded transition-transform duration-300 ${
-                                        isOpen ? "rotate-45 translate-y-2.5 bg-[#c63352]" : ""
-                                    }`}
-                                />
-                                <span
-                                    className={`block w-8 h-1 bg-[#eab5ab] rounded transition-opacity duration-300 ${
-                                        isOpen ? "opacity-0" : "opacity-100"
-                                    }`}
-                                />
-                                <span
-                                    className={`block w-8 h-1 bg-[#eab5ab] rounded transition-transform duration-300 ${
-                                        isOpen ? "-rotate-45 -translate-y-2.5 bg-[#c63352]" : ""
-                                    }`}
-                                />
-                            </button>
-                        )}
-                    </div>
-                </div>
-            </nav>
+	const handleLogout = () => {
+		logout();
+		navigate("/");
+	};
 
-            {/* Mobile Menu - Full-screen overlay */}
-            {isMobile && (
-                <div
-                    className={`fixed inset-0 z-40 bg-black/95 backdrop-blur-md flex flex-col items-center justify-start pt-24 space-y-6 text-xl font-semibold text-white transform transition-transform duration-300 ${
-                        isOpen ? "translate-x-0" : "-translate-x-full"
-                    }`}
-                >
-                    {menuItems.map((item) => (
-                        <Link
-                            key={item.path}
-                            to={item.path}
-                            className={`flex items-center space-x-3 px-6 py-3 rounded-lg w-full max-w-xs justify-center transition ${
-                                location.pathname === item.path
-                                    ? "bg-[#2a0f1a] text-[#c63352]"
-                                    : "text-[#eab5ab] hover:text-[#c63352] hover:bg-black/50"
-                            }`}
-                        >
-                            {item.icon}
-                            <span>{item.name}</span>
-                        </Link>
-                    ))}
-                     {/* Mobile CTA Button */}
-                     <a 
-                        href="https://discord.gg/kxT4fq4rda" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className='flex items-center space-x-2 
-                            bg-[#c63352] text-white 
-                            hover:bg-[#eab5ab] hover:text-black transition 
-                            px-8 py-3 rounded-xl 
-                            font-bold text-lg 
-                            shadow-xl shadow-[#c63352]/40 mt-8'
-                    >
-                        <MessageSquare className='w-5 h-5' /> 
-                        <span>Join Discord</span>
-                    </a>
-                </div>
-            )}
+	const renderLink = (item: { path: string; name: string; icon: JSX.Element }) => {
+		const isActive = location.pathname === item.path;
 
-            {/* Spacer to prevent content overlap */}
-            <div className='h-20'></div>
-        </>
-    );
+		return (
+			<NavLink
+				key={item.path}
+				to={item.path}
+				className={`flex items-center gap-2 rounded-xl px-5 py-2 transition-all duration-300 ${
+					isActive
+						? "bg-[#2a0f1a] text-[#eab5ab] shadow-lg shadow-[#c63352]/20"
+						: "text-[#eab5ab] hover:text-[#c63352]"
+				}`}
+			>
+				{item.icon}
+				<span>{item.name}</span>
+			</NavLink>
+		);
+	};
+
+	return (
+		<>
+			<nav className='fixed top-0 z-50 h-20 w-full border-b border-[#c63352]/30 bg-black/95 font-sans shadow-2xl shadow-black/70 backdrop-blur-sm'>
+				<div className='container relative mx-auto flex h-full items-center justify-between px-6'>
+					<Link to='/' className='flex select-none items-center space-x-3'>
+						<img
+							src='https://i.ibb.co/KjxywBMB/logogif.gif'
+							alt='Kaeryka Logo'
+							className='h-12 w-12 rounded-full border-2 border-[#c63352] object-cover shadow-[0_0_15px_rgba(198,51,82,0.5)]'
+						/>
+						<span className='text-3xl font-bold tracking-wider text-white'>KAERYKA</span>
+					</Link>
+
+					{!isMobile && (
+						<ul className='flex items-center space-x-4 font-semibold text-white'>
+							{menuItems.map(renderLink)}
+							{user ? (
+								<button
+									onClick={handleLogout}
+									className='flex items-center gap-2 rounded-xl bg-[#c63352] px-5 py-2 text-white transition hover:bg-[#eab5ab] hover:text-black'
+								>
+									<LogOut className='h-5 w-5' />
+									<span>Logout</span>
+								</button>
+							) : null}
+						</ul>
+					)}
+
+					<div className='flex items-center space-x-4'>
+						<a
+							href='https://discord.gg/kxT4fq4rda'
+							target='_blank'
+							rel='noopener noreferrer'
+							className='hidden items-center space-x-2 rounded-xl bg-[#c63352] px-6 py-3 text-lg font-bold text-white shadow-2xl shadow-[#c63352]/40 transition transform hover:scale-105 hover:bg-[#eab5ab] hover:text-black active:scale-95 md:flex'
+						>
+							<MessageSquare className='h-5 w-5' />
+							<span>Join Discord</span>
+						</a>
+
+						{isMobile && (
+							<button
+								onClick={() => setIsOpen(!isOpen)}
+								className='relative z-50 flex h-8 w-8 flex-col items-center justify-center gap-1.5'
+							>
+								<span
+									className={`block h-1 w-8 rounded bg-[#eab5ab] transition-transform duration-300 ${isOpen ? "translate-y-2.5 rotate-45 bg-[#c63352]" : ""}`}
+								/>
+								<span
+									className={`block h-1 w-8 rounded bg-[#eab5ab] transition-opacity duration-300 ${isOpen ? "opacity-0" : "opacity-100"}`}
+								/>
+								<span
+									className={`block h-1 w-8 rounded bg-[#eab5ab] transition-transform duration-300 ${isOpen ? "-translate-y-2.5 -rotate-45 bg-[#c63352]" : ""}`}
+								/>
+							</button>
+						)}
+					</div>
+				</div>
+			</nav>
+
+			{isMobile && (
+				<div
+					className={`fixed inset-0 z-40 flex translate-x-0 flex-col items-center justify-start space-y-6 bg-black/95 pt-24 text-xl font-semibold text-white backdrop-blur-md transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+				>
+					{menuItems.map(renderLink)}
+					{user ? (
+						<button
+							onClick={handleLogout}
+							className='mt-6 flex items-center gap-2 rounded-xl bg-[#c63352] px-8 py-3 text-lg font-bold text-white shadow-xl shadow-[#c63352]/40 transition hover:bg-[#eab5ab] hover:text-black'
+						>
+							<LogOut className='h-5 w-5' />
+							<span>Logout</span>
+						</button>
+					) : null}
+					<a
+						href='https://discord.gg/kxT4fq4rda'
+						target='_blank'
+						rel='noopener noreferrer'
+						className='mt-2 flex items-center space-x-2 rounded-xl bg-[#c63352] px-8 py-3 text-lg font-bold text-white shadow-xl shadow-[#c63352]/40 transition hover:bg-[#eab5ab] hover:text-black'
+					>
+						<MessageSquare className='h-5 w-5' />
+						<span>Join Discord</span>
+					</a>
+				</div>
+			)}
+
+			<div className='h-20' />
+		</>
+	);
 }

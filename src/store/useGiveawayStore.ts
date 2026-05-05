@@ -7,21 +7,64 @@ export type GiveawayStatus = "active" | "completed" | "upcoming";
 export interface Giveaway {
 	_id: string;
 	title: string;
+	imageUrl: string;
 	endTime: string;
 	participants: any[];
 	totalParticipants: number;
 	totalEntries: number;
+	maxPlayers: number;
+	depositRequirement: string;
 	status: GiveawayStatus;
 	winner?: any;
 	isEntered: boolean;
+	isApproved?: boolean;
+	applicationStatus?: {
+		status: "pending" | "approved" | "rejected";
+		applicationId: string;
+	} | null;
+}
+
+export interface GiveawayApplication {
+	_id: string;
+	giveaway: string;
+	name: string;
+	discordName: string;
+	depositProofImage: string;
+	status: "pending" | "approved" | "rejected";
+	user?: {
+		id?: string;
+		csgoName?: string;
+		twitchUsername?: string;
+		discordUsername?: string;
+	};
+	reviewedBy?: { csgoName?: string };
 }
 
 interface GiveawayState {
 	giveaways: Giveaway[];
 	fetchGiveaways: () => Promise<void>;
 	enterGiveaway: (id: string, toast: any) => Promise<void>;
-	createGiveaway: (title: string, endTime: string, toast: any) => Promise<void>;
+	createGiveaway: (
+		title: string,
+		imageUrl: string,
+		endTime: string,
+		maxPlayers: number,
+		depositRequirement: string,
+		toast: any
+	) => Promise<void>;
+	submitApplication: (
+		id: string,
+		name: string,
+		discordName: string,
+		depositProofImage: string,
+		toast: any
+	) => Promise<void>;
+	fetchApplications: (id: string) => Promise<GiveawayApplication[]>;
+	approveApplication: (applicationId: string, toast: any) => Promise<void>;
 	drawWinner: (id: string, toast: any) => Promise<void>;
+	declineApplication: (applicationId: string, toast: any) => Promise<void>;
+	deleteApplication: (applicationId: string, toast: any) => Promise<void>;
+	deleteGiveaway: (id: string, toast: any) => Promise<void>;
 }
 
 export const useGiveawayStore = create<GiveawayState>((set, get) => ({
@@ -40,6 +83,7 @@ export const useGiveawayStore = create<GiveawayState>((set, get) => ({
 					(p: any) => p._id === userId || p === userId
 				),
 				status: gws.state === "complete" ? "completed" : gws.state,
+				applicationStatus: gws.applicationStatus || null,
 			}));
 			set({ giveaways: enriched });
 		} catch (err) {
@@ -68,12 +112,19 @@ export const useGiveawayStore = create<GiveawayState>((set, get) => ({
 		}
 	},
 
-	createGiveaway: async (title, endTime, toast) => {
+	createGiveaway: async (
+		title,
+		imageUrl,
+		endTime,
+		maxPlayers,
+		depositRequirement,
+		toast
+	) => {
 		const token = useAuthStore.getState().token;
 		try {
 			await api.post(
 				"/api/gws",
-				{ title, endTime },
+				{ title, imageUrl, endTime, maxPlayers, depositRequirement },
 				{
 					headers: { Authorization: `Bearer ${token}` },
 				}
@@ -84,6 +135,115 @@ export const useGiveawayStore = create<GiveawayState>((set, get) => ({
 			toast({
 				title: "Error",
 				description: "Failed to create giveaway",
+				variant: "destructive",
+			});
+		}
+	},
+
+	submitApplication: async (id, name, discordName, depositProofImage, toast) => {
+		const token = useAuthStore.getState().token;
+		try {
+			await api.post(
+				`/api/gws/${id}/applications`,
+				{ name, discordName, depositProofImage },
+				{
+					headers: { Authorization: `Bearer ${token}` },
+				}
+			);
+			await get().fetchGiveaways();
+			toast({ title: "Application submitted" });
+		} catch (error: any) {
+			toast({
+				title: "Error",
+				description: error.response?.data?.message || "Failed to submit application",
+				variant: "destructive",
+			});
+		}
+	},
+
+	fetchApplications: async (id) => {
+		const token = useAuthStore.getState().token;
+		const res = await api.get(`/api/gws/${id}/applications`, {
+			headers: { Authorization: `Bearer ${token}` },
+		});
+		return res.data;
+	},
+
+	abproveApplication: async (applicationId, toast) => {
+		return get().approveApplication(applicationId, toast);
+	},
+
+	approveApplication: async (applicationId, toast) => {
+		const token = useAuthStore.getState().token;
+		try {
+			await api.patch(
+				`/api/gws/applications/${applicationId}/approve`,
+				{},
+				{
+					headers: { Authorization: `Bearer ${token}` },
+				}
+			);
+			await get().fetchGiveaways();
+			toast({ title: "Application approved" });
+		} catch (error: any) {
+			toast({
+				title: "Error",
+				description: error.response?.data?.message || "Failed to approve application",
+				variant: "destructive",
+			});
+		}
+	},
+
+	declineApplication: async (applicationId, toast) => {
+		const token = useAuthStore.getState().token;
+		try {
+			await api.patch(
+				`/api/gws/applications/${applicationId}/decline`,
+				{},
+				{
+					headers: { Authorization: `Bearer ${token}` },
+				}
+			);
+			await get().fetchGiveaways();
+			toast({ title: "Application declined" });
+		} catch (error: any) {
+			toast({
+				title: "Error",
+				description: error.response?.data?.message || "Failed to decline application",
+				variant: "destructive",
+			});
+		}
+	},
+
+	deleteApplication: async (applicationId, toast) => {
+		const token = useAuthStore.getState().token;
+		try {
+			await api.delete(`/api/gws/applications/${applicationId}`, {
+				headers: { Authorization: `Bearer ${token}` },
+			});
+			await get().fetchGiveaways();
+			toast({ title: "Application deleted" });
+		} catch (error: any) {
+			toast({
+				title: "Error",
+				description: error.response?.data?.message || "Failed to delete application",
+				variant: "destructive",
+			});
+		}
+	},
+
+	deleteGiveaway: async (id, toast) => {
+		const token = useAuthStore.getState().token;
+		try {
+			await api.delete(`/api/gws/${id}`, {
+				headers: { Authorization: `Bearer ${token}` },
+			});
+			await get().fetchGiveaways();
+			toast({ title: "Giveaway deleted" });
+		} catch (error: any) {
+			toast({
+				title: "Error",
+				description: error.response?.data?.message || "Failed to delete giveaway",
 				variant: "destructive",
 			});
 		}

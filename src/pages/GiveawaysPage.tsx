@@ -4,12 +4,26 @@ import { Footer } from "@/components/Footer";
 import { GiveawayCard } from "@/components/GiveawayCard";
 import { useGiveawayStore } from "@/store/useGiveawayStore";
 import { useAuthStore } from "@/store/useAuthStore";
-import { Gift, Search, Filter } from "lucide-react";
+import { Gift, Search, Filter, Upload, ShieldCheck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import GraphicalBackground from "@/components/GraphicalBackground";
+import HomeStyleBackground from "@/components/HomeStyleBackground";
+
+type ApplicationFormState = {
+	csgoName: string;
+	discordName: string;
+	depositProofImage: string;
+};
+
+const readFileAsDataUrl = (file: File) =>
+	new Promise<string>((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onload = () => resolve(String(reader.result));
+		reader.onerror = () => reject(new Error("Failed to read file"));
+		reader.readAsDataURL(file);
+	});
 
 function GiveawaysPage() {
 	const {
@@ -17,7 +31,7 @@ function GiveawaysPage() {
 		fetchGiveaways,
 		enterGiveaway,
 		createGiveaway,
-		drawWinner,
+		submitApplication,
 	} = useGiveawayStore();
 	const { user } = useAuthStore();
 	const { toast } = useToast();
@@ -27,11 +41,49 @@ function GiveawaysPage() {
 		"all" | "active" | "completed" | "upcoming"
 	>("all");
 	const [newTitle, setNewTitle] = useState("");
+	const [newImageUrl, setNewImageUrl] = useState("");
 	const [newEndTime, setNewEndTime] = useState("");
+	const [newMaxPlayers, setNewMaxPlayers] = useState("50");
+	const [newDepositRequirement, setNewDepositRequirement] = useState("");
+	const [applicationForms, setApplicationForms] = useState<
+		Record<string, ApplicationFormState>
+	>({});
 
 	useEffect(() => {
 		fetchGiveaways();
 	}, []);
+
+	const getApplicationForm = (giveawayId: string): ApplicationFormState => {
+		const current = applicationForms[giveawayId];
+		return {
+			csgoName: current?.csgoName ?? user?.csgoName ?? "",
+			discordName: current?.discordName ?? user?.discordUsername ?? "",
+			depositProofImage: current?.depositProofImage ?? "",
+		};
+	};
+
+	const updateApplicationForm = (
+		giveawayId: string,
+		field: keyof ApplicationFormState,
+		value: string
+	) => {
+		setApplicationForms((current) => ({
+			...current,
+			[giveawayId]: {
+				...getApplicationForm(giveawayId),
+				[field]: value,
+			},
+		}));
+	};
+
+	const handleImageUpload = async (
+		file: File | undefined,
+		setter: (value: string) => void
+	) => {
+		if (!file) return;
+		const dataUrl = await readFileAsDataUrl(file);
+		setter(dataUrl);
+	};
 
 	const filteredGiveaways = giveaways.filter((giveaway) => {
 		const matchesSearch = giveaway.title
@@ -54,27 +106,55 @@ function GiveawaysPage() {
 	};
 
 	const handleCreateGiveaway = async () => {
-		if (!newTitle || !newEndTime) {
+		if (!newTitle || !newImageUrl || !newEndTime || !newMaxPlayers || !newDepositRequirement) {
 			toast({
 				title: "Missing fields",
-				description: "Please provide both title and end time.",
+				description: "Please provide title, image, time, player limit, and deposit requirement.",
 				variant: "destructive",
 			});
 			return;
 		}
-		await createGiveaway(newTitle, newEndTime, toast);
+		await createGiveaway(
+			newTitle,
+			newImageUrl,
+			newEndTime,
+			Number(newMaxPlayers),
+			newDepositRequirement,
+			toast
+		);
 		setNewTitle("");
+		setNewImageUrl("");
 		setNewEndTime("");
+		setNewMaxPlayers("50");
+		setNewDepositRequirement("");
 	};
 
-	const handleDrawWinner = async (id: string) => {
-		await drawWinner(id, toast);
+		const handleSubmitApplication = async (giveawayId: string) => {
+		const form = getApplicationForm(giveawayId);
+
+			if (!form.csgoName || !form.discordName || !form.depositProofImage) {
+			toast({
+				title: "Missing fields",
+					description: "Add your CSGO name, Discord name, and deposit proof image.",
+				variant: "destructive",
+			});
+			return;
+		}
+
+			await submitApplication(giveawayId, form.csgoName, form.discordName, form.depositProofImage, toast);
+		setApplicationForms((current) => ({
+			...current,
+			[giveawayId]: {
+					csgoName: form.csgoName,
+				discordName: form.discordName,
+				depositProofImage: "",
+			},
+		}));
 	};
 
 	return (
 		<div className='relative flex flex-col min-h-screen text-white'>
-			{/* Background Canvas */}
-			<GraphicalBackground />
+			<HomeStyleBackground />
 
 			<Navbar />
 
@@ -86,8 +166,8 @@ function GiveawaysPage() {
 
 				<div className='p-6 mb-8 rounded-lg bg-[#000000] border border-[#AF2D03]'>
 					<p className='mb-6 text-[#ffffff]'>
-						Join King&apos;s exciting giveaways for a chance to win real
-						prizes! New opportunities every week.
+						Admin can create giveaways with an image, player limit, and deposit
+						requirement. Users submit a deposit proof application before joining.
 					</p>
 
 					{user?.role === "admin" && (
@@ -96,15 +176,47 @@ function GiveawaysPage() {
 								Create New Giveaway
 							</h2>
 							<Input
-								placeholder='Title'
+								placeholder='Giveaway name'
 								value={newTitle}
 								onChange={(e) => setNewTitle(e.target.value)}
 								className='mb-2 bg-[#ffffff] border border-[#AF2D03] text-black placeholder:text-[#EA6D0C]'
 							/>
 							<Input
+								placeholder='Image URL or data URL'
+								value={newImageUrl}
+								onChange={(e) => setNewImageUrl(e.target.value)}
+								className='mb-2 bg-[#ffffff] border border-[#AF2D03] text-black placeholder:text-[#EA6D0C]'
+							/>
+							<div className='mb-2'>
+								<label className='mb-2 flex items-center gap-2 text-sm text-[#ffffff]'>
+									<Upload className='h-4 w-4' />
+									Upload giveaway image
+								</label>
+								<Input
+									type='file'
+									accept='image/*'
+									onChange={(e) => handleImageUpload(e.target.files?.[0], setNewImageUrl)}
+									className='bg-[#ffffff] border border-[#AF2D03] text-black'
+								/>
+							</div>
+							<Input
 								type='datetime-local'
 								value={newEndTime}
 								onChange={(e) => setNewEndTime(e.target.value)}
+								className='mb-2 bg-[#ffffff] border border-[#AF2D03] text-black placeholder:text-[#EA6D0C]'
+							/>
+							<Input
+								type='number'
+								min='1'
+								placeholder='Max players'
+								value={newMaxPlayers}
+								onChange={(e) => setNewMaxPlayers(e.target.value)}
+								className='mb-2 bg-[#ffffff] border border-[#AF2D03] text-black placeholder:text-[#EA6D0C]'
+							/>
+							<Input
+								placeholder='Deposit requirement'
+								value={newDepositRequirement}
+								onChange={(e) => setNewDepositRequirement(e.target.value)}
 								className='mb-2 bg-[#ffffff] border border-[#AF2D03] text-black placeholder:text-[#EA6D0C]'
 							/>
 							<Button
@@ -160,30 +272,96 @@ function GiveawaysPage() {
 								<GiveawayCard
 									id={giveaway._id}
 									title={giveaway.title}
+									imageUrl={giveaway.imageUrl}
 									prize='Surprise Prize'
 									endTime={new Date(giveaway.endTime).toLocaleString()}
 									participants={giveaway.totalParticipants}
-									maxParticipants={100}
+									maxParticipants={giveaway.maxPlayers}
+									depositRequirement={giveaway.depositRequirement}
 									status={giveaway.status}
 									isEntered={giveaway.isEntered}
+									canEnter={Boolean(giveaway.isApproved)}
 									onEnter={handleEnter}
 								/>
+
+								{user && user.role !== "admin" && !giveaway.isApproved && giveaway.status === "active" && (
+									<div className='mt-4 rounded-lg border border-[#334155] bg-[#090909] p-4 text-white'>
+										<div className='mb-3 flex items-center gap-2 text-sm text-[#EA6D0C]'>
+											<ShieldCheck className='h-4 w-4' />
+											{giveaway.applicationStatus?.status === "rejected"
+												? "Your application was declined. You can apply again below."
+												: giveaway.applicationStatus?.status === "pending"
+													? "Your application is pending review."
+													: "Submit your application to unlock entry"}
+										</div>
+										{giveaway.applicationStatus && (
+											<div className='mb-3 rounded-md border border-[#334155] bg-[#111111] px-3 py-2 text-sm'>
+												Your application status:{" "}
+												<span
+													className={
+														giveaway.applicationStatus.status === "approved"
+															? "text-[#22c55e] font-semibold"
+															: giveaway.applicationStatus.status === "rejected"
+															? "text-[#ef4444] font-semibold"
+															: "text-[#EA6D0C] font-semibold"
+													}
+												>
+													{giveaway.applicationStatus.status}
+												</span>
+											</div>
+										)}
+										{(!giveaway.applicationStatus || giveaway.applicationStatus.status === "rejected") && (
+											<div className='space-y-2'>
+											<Input
+												placeholder='Your CSGO name'
+												value={getApplicationForm(giveaway._id).csgoName}
+												onChange={(e) =>
+													updateApplicationForm(giveaway._id, "csgoName", e.target.value)
+												}
+												className='bg-[#ffffff] border border-[#AF2D03] text-black placeholder:text-[#EA6D0C]'
+											/>
+											<Input
+												placeholder='Discord name'
+												value={getApplicationForm(giveaway._id).discordName}
+												onChange={(e) =>
+													updateApplicationForm(giveaway._id, "discordName", e.target.value)
+												}
+												className='bg-[#ffffff] border border-[#AF2D03] text-black placeholder:text-[#EA6D0C]'
+											/>
+											<Input
+												type='file'
+												accept='image/*'
+												onChange={async (e) => {
+													const file = e.target.files?.[0];
+													if (!file) return;
+													const dataUrl = await readFileAsDataUrl(file);
+													updateApplicationForm(giveaway._id, "depositProofImage", dataUrl);
+												}}
+												className='bg-[#ffffff] border border-[#AF2D03] text-black'
+											/>
+											{getApplicationForm(giveaway._id).depositProofImage && (
+												<img
+													src={getApplicationForm(giveaway._id).depositProofImage}
+													alt='Deposit proof preview'
+													className='h-32 w-full rounded-md object-cover'
+												/>
+											)}
+											<Button
+												onClick={() => handleSubmitApplication(giveaway._id)}
+												className='w-full bg-[#EA6D0C] hover:bg-[#AF2D03] text-black'
+											>
+												{giveaway.applicationStatus?.status === "rejected" ? "Reapply" : "Send Application"}
+											</Button>
+										</div>
+									)}
+									</div>
+								)}
+
 								{giveaway.winner && (
 									<p className='mt-2 text-sm text-[#EA6D0C]'>
-										🎉 Winner: <strong>{giveaway.winner.kickUsername}</strong>
+										🎉 Winner: <strong>{giveaway.winner.csgoName}</strong>
 									</p>
 								)}
-								{user?.role === "admin" &&
-									giveaway.status === "active" &&
-									giveaway.totalParticipants > 0 && (
-										<Button
-											onClick={() => handleDrawWinner(giveaway._id)}
-											variant='destructive'
-											className='w-full mt-2 bg-[#EA6D0C] hover:bg-[#AF2D03] text-black'
-										>
-											Draw Winner
-										</Button>
-									)}
 							</div>
 						))}
 					</div>

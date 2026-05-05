@@ -16,10 +16,10 @@ import { LogIn } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import GraphicalBackground from "@/components/GraphicalBackground";
+import HomeStyleBackground from "@/components/HomeStyleBackground";
 
 function LoginPage() {
-	const [username, setUsername] = useState("");
+	const [csgoName, setCsgoName] = useState("");
 	const [password, setPassword] = useState("");
 	const { login, isLoading } = useAuthStore();
 	const { toast } = useToast();
@@ -27,15 +27,15 @@ function LoginPage() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!username || !password) return;
+		if (!csgoName || !password) return;
 
 		try {
-			const success = await login(username, password);
+			const success = await login(csgoName, password);
 
 			if (success) {
 				toast({
 					title: "Logged In",
-					description: `Welcome back, ${username}!`,
+					description: `Welcome back, ${csgoName}!`,
 				});
 				navigate("/");
 			}
@@ -50,10 +50,7 @@ function LoginPage() {
 
 	return (
 		<div className='relative flex flex-col min-h-screen  text-[#000000]'>
-			{/* Background Canvas */}
-			<div className='fixed inset-0 -z-10'>
-				<GraphicalBackground />
-			</div>
+			<HomeStyleBackground />
 
 			<Navbar />
 
@@ -65,21 +62,21 @@ function LoginPage() {
 							<CardTitle className='text-2xl text-[#000000]'>Login</CardTitle>
 						</div>
 						<CardDescription className='text-center text-[#000000]'>
-							Enter your Kick username and password to access your account
+							Enter your CSGO name and password to access your account
 						</CardDescription>
 					</CardHeader>
 
 					<form onSubmit={handleSubmit}>
 						<CardContent className='space-y-4'>
 							<div className='space-y-2'>
-								<Label htmlFor='username' className='text-[#000000]'>
-									Kick Username
+								<Label htmlFor='csgoName' className='text-[#000000]'>
+									CSGO Name
 								</Label>
 								<Input
-									id='username'
-									placeholder='Enter your username'
-									value={username}
-									onChange={(e) => setUsername(e.target.value)}
+									id='csgoName'
+									placeholder='Enter your CSGO name'
+									value={csgoName}
+									onChange={(e) => setCsgoName(e.target.value)}
 									required
 									className='bg-[#FFFFFF] border border-[#E0E0E0] text-[#000000] placeholder:text-[#999999]'
 								/>

@@ -4,22 +4,12 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Instagram, Twitch, Twitter, Youtube } from "lucide-react";
+import HomeStyleBackground from "@/components/HomeStyleBackground";
 
 const HomePage = () => {
   return (
     <div className="relative flex flex-col min-h-screen text-white">
-      {/* Full Page GIF Background */}
-      <div
-        className="fixed inset-0 z-0 bg-center bg-no-repeat bg-contain opacity-44"
-        style={{
-          backgroundImage: `url('https://i.ibb.co/KjxywBMB/logogif.gif')`,
-          backgroundColor: "#000"
-        }}
-      ></div>
-
-      
-      {/* Gradient Overlay for better readability */}
-      <div className="fixed inset-0 z-0 bg-gradient-to-b from-black/80 via-black/90 to-black"></div>
+      <HomeStyleBackground />
 
       {/* Content */}
       <div className="relative z-10">

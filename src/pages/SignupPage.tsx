@@ -17,11 +17,12 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { Link, useNavigate } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import GraphicalBackground from "@/components/GraphicalBackground";
+import HomeStyleBackground from "@/components/HomeStyleBackground";
 
 function SignupPage() {
-	const [username, setUsername] = useState("");
-	const [rainbetUsername, setRainbetUsername] = useState("");
+	const [twitchUsername, setTwitchUsername] = useState("");
+	const [discordUsername, setDiscordUsername] = useState("");
+	const [csgoName, setCsgoName] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -33,7 +34,7 @@ function SignupPage() {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		if (!username || !rainbetUsername || !password || !confirmPassword) return;
+		if (!twitchUsername || !discordUsername || !csgoName || !password || !confirmPassword) return;
 
 		if (password !== confirmPassword) {
 			setPasswordError("Passwords do not match");
@@ -44,8 +45,9 @@ function SignupPage() {
 
 		try {
 			const success = await signup(
-				username,
-				rainbetUsername,
+				twitchUsername,
+				discordUsername,
+				csgoName,
 				password,
 				confirmPassword
 			);
@@ -67,10 +69,7 @@ function SignupPage() {
 
 	return (
 		<div className='relative flex flex-col min-h-screen'>
-			{/* Background Layer */}
-			<div className='absolute inset-0 -z-10'>
-				<GraphicalBackground />
-			</div>
+			<HomeStyleBackground />
 
 			<Navbar />
 
@@ -84,38 +83,53 @@ function SignupPage() {
 							</CardTitle>
 						</div>
 						<CardDescription className='text-center text-[#000000]'>
-							Enter your Kick and Rainbet usernames to register and join the
+							Enter your Twitch, Discord, and CSGO details to register and join the
 							community
 						</CardDescription>
 					</CardHeader>
 
 					<form onSubmit={handleSubmit}>
 						<CardContent className='space-y-4'>
-							{/* Kick Username */}
+							{/* Twitch Username */}
 							<div className='space-y-2'>
-								<Label htmlFor='username' className='text-[#000000]'>
-									Kick Username
+								<Label htmlFor='twitchUsername' className='text-[#000000]'>
+									Twitch Username
 								</Label>
 								<Input
-									id='username'
-									placeholder='Enter your Kick username'
-									value={username}
-									onChange={(e) => setUsername(e.target.value)}
+									id='twitchUsername'
+									placeholder='Enter your Twitch username'
+									value={twitchUsername}
+									onChange={(e) => setTwitchUsername(e.target.value)}
 									required
 									className='bg-white border border-[#E0E0E0] text-[#000000] placeholder:text-[#999999]'
 								/>
 							</div>
 
-							{/* Rainbet Username */}
+							{/* Discord Username */}
 							<div className='space-y-2'>
-								<Label htmlFor='rainbetUsername' className='text-[#000000]'>
-									Rainbet Username
+								<Label htmlFor='discordUsername' className='text-[#000000]'>
+									Discord Username
 								</Label>
 								<Input
-									id='rainbetUsername'
-									placeholder='Enter your Rainbet username'
-									value={rainbetUsername}
-									onChange={(e) => setRainbetUsername(e.target.value)}
+									id='discordUsername'
+									placeholder='Enter your Discord username'
+									value={discordUsername}
+									onChange={(e) => setDiscordUsername(e.target.value)}
+									required
+									className='bg-white border border-[#E0E0E0] text-[#000000] placeholder:text-[#999999]'
+								/>
+							</div>
+
+							{/* CSGO Name */}
+							<div className='space-y-2'>
+								<Label htmlFor='csgoName' className='text-[#000000]'>
+									CSGO Name
+								</Label>
+								<Input
+									id='csgoName'
+									placeholder='Enter your CSGO name'
+									value={csgoName}
+									onChange={(e) => setCsgoName(e.target.value)}
 									required
 									className='bg-white border border-[#E0E0E0] text-[#000000] placeholder:text-[#999999]'
 								/>

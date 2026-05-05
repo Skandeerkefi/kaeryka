@@ -7,24 +7,30 @@ export type GiveawayStatus = "active" | "completed" | "upcoming";
 interface GiveawayCardProps {
 	id: string;
 	title: string;
+	imageUrl: string;
 	prize: string;
 	endTime: string;
 	participants: number;
 	maxParticipants?: number;
+	depositRequirement: string;
 	status: GiveawayStatus;
 	isEntered?: boolean;
+	canEnter?: boolean;
 	onEnter?: (id: string) => void;
 }
 
 export function GiveawayCard({
 	id,
 	title,
+	imageUrl,
 	prize,
 	endTime,
 	participants,
 	maxParticipants = 100,
+	depositRequirement,
 	status,
 	isEntered = false,
+	canEnter = true,
 	onEnter,
 }: GiveawayCardProps) {
 	const participationPercentage = Math.min(
@@ -34,6 +40,18 @@ export function GiveawayCard({
 
 	return (
 		<div className='overflow-hidden rounded-lg border border-[#E10600] bg-[#000000]'>
+			<div className='relative h-44 overflow-hidden bg-[#111111]'>
+				<img
+					src={imageUrl}
+					alt={title}
+					className='h-full w-full object-cover'
+				/>
+				<div className='absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent' />
+				<div className='absolute bottom-3 left-3 rounded-full bg-black/70 px-3 py-1 text-xs text-white'>
+					{depositRequirement}
+				</div>
+			</div>
+
 			{/* Accent top bar */}
 			<div className='h-3 bg-gradient-to-r from-[#E10600] via-[#ff2a2a] to-[#ff5555]' />
 
@@ -72,12 +90,22 @@ export function GiveawayCard({
 				</div>
 
 				<div className='mt-4'>
-					{status === "active" && !isEntered && (
+					{status === "active" && !isEntered && canEnter && (
 						<Button
 							className='w-full bg-[#E10600] hover:bg-[#ff2a2a] text-[#FFFFFF]'
 							onClick={() => onEnter && onEnter(id)}
 						>
 							Enter Giveaway
+						</Button>
+					)}
+
+					{status === "active" && !isEntered && !canEnter && (
+						<Button
+							variant='outline'
+							className='w-full text-[#D3D3D3] border-[#D3D3D3]'
+							disabled
+						>
+							Application Required
 						</Button>
 					)}
 
