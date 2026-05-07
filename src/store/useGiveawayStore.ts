@@ -14,6 +14,7 @@ export interface Giveaway {
 	totalEntries: number;
 	maxPlayers: number;
 	depositRequirement: string;
+	winnerSelectionType: "random" | "highest_deposit";
 	status: GiveawayStatus;
 	winner?: any;
 	isEntered: boolean;
@@ -29,7 +30,9 @@ export interface GiveawayApplication {
 	giveaway: string;
 	name: string;
 	discordName: string;
-	depositProofImage: string;
+	depositProofVideo: string;
+	depositAmount: number;
+	createdAt: string;
 	status: "pending" | "approved" | "rejected";
 	user?: {
 		id?: string;
@@ -50,13 +53,15 @@ interface GiveawayState {
 		endTime: string,
 		maxPlayers: number,
 		depositRequirement: string,
+		winnerSelectionType: "random" | "highest_deposit",
 		toast: any
 	) => Promise<void>;
 	submitApplication: (
 		id: string,
 		name: string,
 		discordName: string,
-		depositProofImage: string,
+		depositProofVideo: string,
+		depositAmount: number,
 		toast: any
 	) => Promise<void>;
 	fetchApplications: (id: string) => Promise<GiveawayApplication[]>;
@@ -118,13 +123,21 @@ export const useGiveawayStore = create<GiveawayState>((set, get) => ({
 		endTime,
 		maxPlayers,
 		depositRequirement,
+		winnerSelectionType,
 		toast
 	) => {
 		const token = useAuthStore.getState().token;
 		try {
 			await api.post(
 				"/api/gws",
-				{ title, imageUrl, endTime, maxPlayers, depositRequirement },
+				{
+					title,
+					imageUrl,
+					endTime,
+					maxPlayers,
+					depositRequirement,
+					winnerSelectionType,
+				},
 				{
 					headers: { Authorization: `Bearer ${token}` },
 				}
@@ -140,12 +153,19 @@ export const useGiveawayStore = create<GiveawayState>((set, get) => ({
 		}
 	},
 
-	submitApplication: async (id, name, discordName, depositProofImage, toast) => {
+	submitApplication: async (
+		id,
+		name,
+		discordName,
+		depositProofVideo,
+		depositAmount,
+		toast
+	) => {
 		const token = useAuthStore.getState().token;
 		try {
 			await api.post(
 				`/api/gws/${id}/applications`,
-				{ name, discordName, depositProofImage },
+				{ name, discordName, depositProofVideo, depositAmount },
 				{
 					headers: { Authorization: `Bearer ${token}` },
 				}

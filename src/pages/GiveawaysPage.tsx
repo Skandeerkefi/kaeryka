@@ -14,7 +14,8 @@ import HomeStyleBackground from "@/components/HomeStyleBackground";
 type ApplicationFormState = {
 	csgoName: string;
 	discordName: string;
-	depositProofImage: string;
+	depositProofVideo: string;
+	depositAmount: string;
 };
 
 const readFileAsDataUrl = (file: File) =>
@@ -45,6 +46,9 @@ function GiveawaysPage() {
 	const [newEndTime, setNewEndTime] = useState("");
 	const [newMaxPlayers, setNewMaxPlayers] = useState("50");
 	const [newDepositRequirement, setNewDepositRequirement] = useState("");
+	const [newWinnerSelectionType, setNewWinnerSelectionType] = useState<
+		"random" | "highest_deposit"
+	>("random");
 	const [applicationForms, setApplicationForms] = useState<
 		Record<string, ApplicationFormState>
 	>({});
@@ -58,7 +62,8 @@ function GiveawaysPage() {
 		return {
 			csgoName: current?.csgoName ?? user?.csgoName ?? "",
 			discordName: current?.discordName ?? user?.discordUsername ?? "",
-			depositProofImage: current?.depositProofImage ?? "",
+			depositProofVideo: current?.depositProofVideo ?? "",
+			depositAmount: current?.depositAmount ?? "",
 		};
 	};
 
@@ -120,6 +125,7 @@ function GiveawaysPage() {
 			newEndTime,
 			Number(newMaxPlayers),
 			newDepositRequirement,
+			newWinnerSelectionType,
 			toast
 		);
 		setNewTitle("");
@@ -127,27 +133,44 @@ function GiveawaysPage() {
 		setNewEndTime("");
 		setNewMaxPlayers("50");
 		setNewDepositRequirement("");
+		setNewWinnerSelectionType("random");
 	};
 
-		const handleSubmitApplication = async (giveawayId: string) => {
+	const handleSubmitApplication = async (giveawayId: string) => {
 		const form = getApplicationForm(giveawayId);
+		const parsedDepositAmount = Number(form.depositAmount);
 
-			if (!form.csgoName || !form.discordName || !form.depositProofImage) {
+		if (
+			!form.csgoName ||
+			!form.discordName ||
+			!form.depositProofVideo ||
+			!Number.isFinite(parsedDepositAmount) ||
+			parsedDepositAmount < 0
+		) {
 			toast({
 				title: "Missing fields",
-					description: "Add your CSGO name, Discord name, and deposit proof image.",
+				description:
+					"Add your CSGO name, Discord name, deposit amount, and deposit proof video.",
 				variant: "destructive",
 			});
 			return;
 		}
 
-			await submitApplication(giveawayId, form.csgoName, form.discordName, form.depositProofImage, toast);
+		await submitApplication(
+			giveawayId,
+			form.csgoName,
+			form.discordName,
+			form.depositProofVideo,
+			parsedDepositAmount,
+			toast
+		);
 		setApplicationForms((current) => ({
 			...current,
 			[giveawayId]: {
-					csgoName: form.csgoName,
+				csgoName: form.csgoName,
 				discordName: form.discordName,
-				depositProofImage: "",
+				depositProofVideo: "",
+				depositAmount: "",
 			},
 		}));
 	};
@@ -167,7 +190,7 @@ function GiveawaysPage() {
 				<div className='p-6 mb-8 rounded-lg bg-[#000000] border border-[#AF2D03]'>
 					<p className='mb-6 text-[#ffffff]'>
 						Admin can create giveaways with an image, player limit, and deposit
-						requirement. Users submit a deposit proof application before joining.
+						requirement. Users submit a deposit video and amount before joining.
 					</p>
 
 					{user?.role === "admin" && (
@@ -219,6 +242,18 @@ function GiveawaysPage() {
 								onChange={(e) => setNewDepositRequirement(e.target.value)}
 								className='mb-2 bg-[#ffffff] border border-[#AF2D03] text-black placeholder:text-[#EA6D0C]'
 							/>
+							<select
+								value={newWinnerSelectionType}
+								onChange={(e) =>
+									setNewWinnerSelectionType(
+										e.target.value as "random" | "highest_deposit"
+									)
+								}
+								className='mb-2 h-10 w-full rounded-md border border-[#AF2D03] bg-[#ffffff] px-3 text-black'
+							>
+								<option value='random'>Winner Type: Random</option>
+								<option value='highest_deposit'>Winner Type: Highest Deposit</option>
+							</select>
 							<Button
 								onClick={handleCreateGiveaway}
 								className='bg-[#ffffff] hover:bg-[#AF2D03] text-black'
@@ -273,7 +308,11 @@ function GiveawaysPage() {
 									id={giveaway._id}
 									title={giveaway.title}
 									imageUrl={giveaway.imageUrl}
-									prize='Surprise Prize'
+									prize={
+										giveaway.winnerSelectionType === "highest_deposit"
+											? "Highest Deposit Wins"
+											: "Random Winner"
+									}
 									endTime={new Date(giveaway.endTime).toLocaleString()}
 									participants={giveaway.totalParticipants}
 									maxParticipants={giveaway.maxPlayers}
@@ -329,21 +368,32 @@ function GiveawaysPage() {
 												className='bg-[#ffffff] border border-[#AF2D03] text-black placeholder:text-[#EA6D0C]'
 											/>
 											<Input
+												type='number'
+												min='0'
+												step='0.01'
+												placeholder='Deposit amount'
+												value={getApplicationForm(giveaway._id).depositAmount}
+												onChange={(e) =>
+													updateApplicationForm(giveaway._id, "depositAmount", e.target.value)
+												}
+												className='bg-[#ffffff] border border-[#AF2D03] text-black placeholder:text-[#EA6D0C]'
+											/>
+											<Input
 												type='file'
-												accept='image/*'
+												accept='video/*'
 												onChange={async (e) => {
 													const file = e.target.files?.[0];
 													if (!file) return;
 													const dataUrl = await readFileAsDataUrl(file);
-													updateApplicationForm(giveaway._id, "depositProofImage", dataUrl);
+													updateApplicationForm(giveaway._id, "depositProofVideo", dataUrl);
 												}}
 												className='bg-[#ffffff] border border-[#AF2D03] text-black'
 											/>
-											{getApplicationForm(giveaway._id).depositProofImage && (
-												<img
-													src={getApplicationForm(giveaway._id).depositProofImage}
-													alt='Deposit proof preview'
+											{getApplicationForm(giveaway._id).depositProofVideo && (
+												<video
+													src={getApplicationForm(giveaway._id).depositProofVideo}
 													className='h-32 w-full rounded-md object-cover'
+													controls
 												/>
 											)}
 											<Button

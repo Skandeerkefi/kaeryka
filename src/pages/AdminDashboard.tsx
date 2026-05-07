@@ -28,8 +28,8 @@ function AdminDashboard() {
 		Record<string, GiveawayApplication[]>
 	>({});
 	const [loadingGiveawayId, setLoadingGiveawayId] = useState<string | null>(null);
-	const [selectedImage, setSelectedImage] = useState<string | null>(null);
-	const [selectedImageUser, setSelectedImageUser] = useState<{
+	const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+	const [selectedVideoUser, setSelectedVideoUser] = useState<{
 		name: string;
 		discord: string;
 	} | null>(null);
@@ -209,6 +209,12 @@ function AdminDashboard() {
 											<p className='text-sm text-[#D3D3D3]'>
 												Deposit Requirement: {giveaway.depositRequirement}
 											</p>
+											<p className='text-sm text-[#D3D3D3]'>
+												Winner Type:{" "}
+												{giveaway.winnerSelectionType === "highest_deposit"
+													? "Highest Deposit"
+													: "Random"}
+											</p>
 										</div>
 									</div>
 									<div className='flex flex-col gap-2'>
@@ -271,20 +277,20 @@ function AdminDashboard() {
 														</p>
 													</div>
 
-													{/* Image Preview */}
+													{/* Video Preview */}
 													<div className='col-span-1'>
-														{application.depositProofImage && (
+														{application.depositProofVideo && (
 															<div className='relative group'>
-																<img
-																	src={application.depositProofImage}
-																	alt='Deposit proof'
+																<video
+																	src={application.depositProofVideo}
 																	className='w-full h-40 rounded-md object-cover border border-[#334155]'
+																	controls
 																/>
 																<Button
 																	type='button'
 																	onClick={() => {
-																		setSelectedImage(application.depositProofImage);
-																		setSelectedImageUser({
+																		setSelectedVideo(application.depositProofVideo);
+																		setSelectedVideoUser({
 																			name: application.name,
 																			discord: application.discordName,
 																		});
@@ -300,6 +306,9 @@ function AdminDashboard() {
 
 													{/* Status */}
 													<div className='col-span-1'>
+														<p className='text-sm text-[#D3D3D3] mb-2'>
+															Deposit Amount: {application.depositAmount}
+														</p>
 														<p className='text-sm text-[#D3D3D3]'>
 															Status:{" "}
 															<span
@@ -388,40 +397,40 @@ function AdminDashboard() {
 				)}
 			</main>
 
-			{selectedImage && (
+			{selectedVideo && (
 				<div className='fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4'>
 					<button
 						type='button'
 						className='absolute inset-0 cursor-default'
 						onClick={() => {
-							setSelectedImage(null);
-							setSelectedImageUser(null);
+							setSelectedVideo(null);
+							setSelectedVideoUser(null);
 						}}
-						aria-label='Close image viewer'
+						aria-label='Close video viewer'
 					/>
 					<div className='relative z-10 w-full max-w-4xl rounded-xl border border-[#AF2D03] bg-[#000000] p-4 shadow-2xl'>
 						<div className='mb-4 flex items-center justify-between gap-4'>
 							<div>
-								<h2 className='text-xl font-bold text-white'>Deposit Proof</h2>
+								<h2 className='text-xl font-bold text-white'>Deposit Proof Video</h2>
 								<p className='text-sm text-[#D3D3D3]'>
-									{selectedImageUser?.name} · {selectedImageUser?.discord}
+									{selectedVideoUser?.name} · {selectedVideoUser?.discord}
 								</p>
 							</div>
 							<Button
 								type='button'
 								onClick={() => {
-									setSelectedImage(null);
-									setSelectedImageUser(null);
+									setSelectedVideo(null);
+									setSelectedVideoUser(null);
 								}}
 								className='bg-[#EA6D0C] text-black hover:bg-[#AF2D03]'
 							>
 								Close
 							</Button>
 						</div>
-						<img
-							src={selectedImage}
-							alt='Full deposit proof'
+						<video
+							src={selectedVideo}
 							className='max-h-[75vh] w-full rounded-lg border border-[#AF2D03] object-contain'
+							controls
 						/>
 					</div>
 				</div>
