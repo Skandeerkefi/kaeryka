@@ -119,26 +119,26 @@ const HomePage = () => {
    {/* Codes Grid */}
    <div className="grid max-w-6xl grid-cols-1 gap-6 mx-auto sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
      {[
-      "https://bit.ly/526KAERYKA1V",
- "https://bit.ly/526KAERYKA2V",
- "https://bit.ly/526KAERYKA3V",
- "https://bit.ly/526KAERYKA4V",
- "https://bit.ly/526KAERYKA5V",
- "https://bit.ly/526KAERYKA6V",
- "https://bit.ly/526KAERYKA7V",
- "https://bit.ly/526KAERYKA8V",
- "https://bit.ly/526KAERYKA9V",
- "https://bit.ly/526KAERYKA10V",
- "https://bit.ly/526KAERYKA11V",
- "https://bit.ly/526KAERYKA12V",
- "https://bit.ly/526KAERYKA13V",
- "https://bit.ly/526KAERYKA14V",
- "https://bit.ly/526KAERYKA15V",
- "https://bit.ly/526KAERYKA16V",
- "https://bit.ly/526KAERYKA17V",
- "https://bit.ly/526KAERYKA18V",
- "https://bit.ly/526KAERYKA19V",
- "https://bit.ly/526KAERYKA20V",
+       "https://bit.ly/626KAERYKA1V",
+  "https://bit.ly/626KAERYKA2V",
+  "https://bit.ly/626KAERYKA3V",
+  "https://bit.ly/626KAERYKA4V",
+  "https://bit.ly/626KAERYKA5V",
+  "https://bit.ly/626KAERYKA6V",
+  "https://bit.ly/626KAERYKA7V",
+  "https://bit.ly/626KAERYKA8V",
+  "https://bit.ly/626KAERYKA9V",
+  "https://bit.ly/626KAERYKA10V",
+  "https://bit.ly/626KAERYKA11V",
+  "https://bit.ly/626KAERYKA12V",
+  "https://bit.ly/626KAERYKA13V",
+  "https://bit.ly/626KAERYKA14V",
+  "https://bit.ly/626KAERYKA15V",
+  "https://bit.ly/626KAERYKA16V",
+  "https://bit.ly/626KAERYKA17V",
+  "https://bit.ly/626KAERYKA18V",
+  "https://bit.ly/626KAERYKA19V",
+  "https://bit.ly/626KAERYKA20V",
      ].map((code, index) => (
       <motion.button
         key={index}
@@ -149,6 +149,42 @@ const HomePage = () => {
         Code #{index + 1}
       </motion.button>
     ))}
+  </div>
+
+  <div className="mt-16">
+    <h3 className="text-3xl font-bold text-[#c63352] mb-4 text-center">
+      GW Grid 🎁
+    </h3>
+    <p className="text-[#eab5ab] text-lg mb-10 max-w-2xl mx-auto text-center">
+      Join these giveaways using my code{' '}
+      <span className="font-bold text-[#c63352]">KAERYKA</span>.
+    </p>
+    <div className="flex justify-center mb-10">
+      <Button
+        className="bg-[#c63352] hover:bg-[#eab5ab] hover:text-black text-white px-8 py-4 rounded-2xl text-lg font-semibold shadow-lg hover:shadow-[#eab5ab]/40 transition-all"
+        onClick={() => window.open("https://casehug.com/r/KAERYKA", "_blank")}
+      >
+        Open My Code
+      </Button>
+    </div>
+    <div className="grid max-w-6xl grid-cols-1 gap-6 mx-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+      {[
+        "https://casehug.com/es/user-giveaway/c8a71ca4i157926",
+        "https://casehug.com/es/user-giveaway/38981ea6i150499",
+        "https://casehug.com/es/user-giveaway/31443e9fi150498",
+        "https://casehug.com/es/user-giveaway/6ef8811ci123577",
+        "https://casehug.com/es/user-giveaway/8b19a50ci141881",
+      ].map((giveaway, index) => (
+        <motion.button
+          key={index}
+          whileHover={{ scale: 1.05 }}
+          onClick={() => window.open(giveaway, "_blank")}
+          className="p-4 rounded-2xl bg-gradient-to-b from-black/60 to-black/40 border border-[#c63352]/30 shadow-lg backdrop-blur-md text-[#eab5ab] font-semibold text-sm hover:shadow-[#eab5ab]/20 transition-all"
+        >
+          Giveaway #{index + 1}
+        </motion.button>
+      ))}
+    </div>
   </div>
 </section>
 
